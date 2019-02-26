@@ -1,6 +1,10 @@
 package com.example.employeeMany.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name= "employees")
@@ -19,6 +23,23 @@ public class Employee {
     @Column(name = "employee_number")
     private int employeeNumber;
 
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name ="employees_projects",
+            joinColumns = {@JoinColumn(
+                    name = "employee_id",
+                    nullable = false,
+                    updatable = false
+            )},
+            inverseJoinColumns = { @JoinColumn(
+                    name = "project_id",
+                    nullable = false,
+                    updatable = false
+            )}
+    )
+    private List<Project> projects;
+
     @ManyToOne
     @JoinColumn(name = "department_id", nullable = false)
     private Department department;
@@ -28,6 +49,7 @@ public class Employee {
         this.lastName = lastName;
         this.employeeNumber = employeeNumber;
         this.department = department;
+        this.projects = new ArrayList<>();
     }
 
     public Employee(){
